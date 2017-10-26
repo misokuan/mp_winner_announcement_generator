@@ -30,6 +30,18 @@ And then install gems for this project
 bundle install
 ```
 
+### Headless Browser Support
+Install headless, xvfb and firefox:
+```
+gem install headless
+gem install xvfb
+gem install firefox
+```
+Install GeckoDriver:
+```
+https://github.com/mozilla/geckodriver
+```
+
 ## Usage
 1. Put social media links in `mp_winner_links.txt`
 2. Run 'ruby mp_winner_code_generator.rb' in terminal
