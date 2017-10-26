@@ -75,23 +75,25 @@ generator = Thread.new {
 
 }
 
-# message_log = Thread.new {
-#     def log_message(file)
-#         command = Array.new;
-#         File.foreach(file) do |line|
-#             command.push(line)
-#         end
-#
-#         command.each { |line|
-#             line.each_byte { |x|
-#                 print x.chr
-#                 sleep 0.008
-#             }
-#         }
-#     end
-#
-#     log_message('.run')
-# }
+message_log = Thread.new {
+    def log_message(file)
+        command = Array.new;
+        if File.exist?(file)
+            File.foreach(file) do |line|
+                command.push(line)
+            end
+
+            command.each { |line|
+                line.each_byte { |x|
+                    print x.chr
+                    sleep 0.008
+                }
+            }
+        end
+    end
+
+    log_message('.run')
+}
 
 generator.join
-# message_log.join
+message_log.join
