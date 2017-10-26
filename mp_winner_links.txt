@@ -1,2 +1,5 @@
-// Remove everything in this file and input one link per line
-// If there is any error, test one link at a time
+https://web.facebook.com/photo.php?fbid=10214535615452269&set=pb.1477241881.-2207520000.1508499610.&type=3&theater
+https://www.instagram.com/p/BaPF9aRhmPn/?taken-by=dwilesmana90
+https://twitter.com/rahmah_zhafirah/status/922970289964695552
+https://web.facebook.com/photo.php?fbid=10214535615452269&set=pb.1477241881.-2207520000.1508499610.&type=3&theater
+https://www.instagram.com/p/BaPF9aRhmPn/?taken-by=dwilesmana90

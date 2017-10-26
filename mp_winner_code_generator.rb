@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'selenium-webdriver'
 require 'date'
+require 'headless'
 
 generator = Thread.new {
 
@@ -27,29 +28,33 @@ generator = Thread.new {
     avatar_list = Array.new;
     platform_list = Array.new;
     prizes_list = ["Pemenang iPhone X","Pemenang iPhone 8","Pemenang iPhone 8","Pemenang iPhone 8","Pemenang iPhone 8"];
-
-    driver = Selenium::WebDriver.for :chrome
-
+    #print 'Setting up headless'
+    @headless = Headless.new
+    @headless.start
+    #print 'Starting headless'
+    @driver = Selenium::WebDriver.for :firefox
+    #print 'Driver assigned to Selenium Firefox'
     File.foreach('mp_winner_links.txt').each_slice(5) do |list|
         list.each_with_index { |link, index|
-            driver.get link
+            #print "Getting link for winner ##{index+1}"
+            @driver.get link
             if link.include? "instagram"
-                username = driver.find_elements(:class_name, "_2g7d5")[0].text
-                caption = driver.find_element(:css, "li._ezgzd span").text.gsub("\n",' ')
-                image = driver.find_element(:css, "div._4rbun img").attribute('src')
-                avatar = driver.find_element(:css, "img._rewi8").attribute('src')
+                username = @driver.find_elements(:class_name, "_2g7d5")[0].text
+                caption = @driver.find_element(:css, "li._ezgzd span").text.gsub("\n",' ')
+                image = @driver.find_element(:css, "div._4rbun img").attribute('src')
+                avatar = @driver.find_element(:css, "img._rewi8").attribute('src')
                 platform = "fa-instagram"
             elsif link.include? "facebook"
-                username = driver.find_elements(:css, "span.fwb")[0].text
-                caption = driver.find_element(:css, "div.userContent").text.gsub("\n",' ')
-                image = driver.find_element(:css, "div._46-h img._46-i").attribute('src')
-                avatar = driver.find_element(:css, "div._38vo img").attribute('src')
+                username = @driver.find_elements(:css, "span.fwb")[0].text
+                caption = @driver.find_element(:css, "div.userContent").text.gsub("\n",' ')
+                image = @driver.find_element(:css, "div._46-h img._46-i").attribute('src')
+                avatar = @driver.find_element(:css, "div._38vo img").attribute('src')
                 platform = "fa-facebook"
             elsif link.include? "twitter"
-                username = driver.find_elements(:css, "strong.fullname.show-popup-with-id")[0].text
-                caption = driver.find_element(:css, "div.js-tweet-text-container p.tweet-text").text.gsub("\n",' ')
-                image = driver.find_element(:css, "div.js-adaptive-photo img").attribute('src')
-                avatar = driver.find_element(:css, "img.js-action-profile-avatar").attribute('src')
+                username = @driver.find_elements(:css, "strong.fullname.show-popup-with-id")[0].text
+                caption = @driver.find_element(:css, "div.js-tweet-text-container p.tweet-text").text.gsub("\n",' ')
+                image = @driver.find_element(:css, "div.js-adaptive-photo img").attribute('src')
+                avatar = @driver.find_element(:css, "img.js-action-profile-avatar").attribute('src')
                 platform = "fa-twitter"
             end
             username_list.push(username)
@@ -57,6 +62,7 @@ generator = Thread.new {
             image_list.push(image)
             avatar_list.push(avatar)
             platform_list.push(platform)
+	    #print "Done getting info for winner ##{index+1}"
         }
     end
 
@@ -72,7 +78,8 @@ generator = Thread.new {
         file << "prizes: #{prizes_list},\n"
         file << "}\n"
     }
-
+    
+    #print "Done generating code"
 }
 
 message_log = Thread.new {
@@ -86,7 +93,7 @@ message_log = Thread.new {
             command.each { |line|
                 line.each_byte { |x|
                     print x.chr
-                    sleep 0.008
+                    sleep 0.015
                 }
             }
         end
@@ -97,3 +104,6 @@ message_log = Thread.new {
 
 generator.join
 message_log.join
+
+@driver.quit
+@headless.destroy
